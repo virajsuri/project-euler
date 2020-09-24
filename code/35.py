@@ -1,11 +1,9 @@
 import numpy as np
+import math
 import datetime
 start_time = datetime.datetime.now()
 
-count = 0
-length = 1000000
-
-def SieveOfEratosthenes(n): 
+def sieve(n): 
     primes = []
     prime = [True for i in range(n + 1)] 
     p = 2
@@ -17,7 +15,7 @@ def SieveOfEratosthenes(n):
             # Update all multiples of p 
             for i in range(p * 2, n + 1, p): 
                 prime[i] = False
-        p += 1
+        p+=s1
     prime[0]= False
     prime[1]= False
     # Print all prime numbers 
@@ -28,31 +26,31 @@ def SieveOfEratosthenes(n):
     
     return primes
 
+def circular():
+    count = 0
+    primes = np.array(sieve(1000000))
 
-primes = np.array(SieveOfEratosthenes(length))
-print('Primes generated')
+    for n in primes:
+        if(('0' or '2' or '4' or '5' or '6' or '8') in str(n)):  
+            continue
 
-for x in range(1, length, 2):
-    if(('0' or '2' or '4' or '5' or '6' or '8') in str(x)):  
-        continue
-    
-    if(x in primes):
-        split = (str(x))
+        length = int(math.log10(n)) + 1 #finds length of int without converting to str
+        p = math.pow(10, length) - 1 #10^L(n) -1
         non_prime_found = False
-        
-        #iterate through rotations
-        for x in range(len(split)):
-            split = split[1:] + split[:1]
 
-            #if the rotation is not prime
-            if(int(split) not in primes):
+        for y in range(1,length):
+            #rotate
+            n = (n + n%10 * p) / 10
+
+            #check if rotation is prime
+            if(n not in primes):
                 non_prime_found = True
                 break
-
+        
         if(non_prime_found == False):
             count+=1
+        
+    print(count)
 
-print(count+1) #add one to account for 2 being prime
-
-end_time = datetime.datetime.now()
-print((end_time-start_time))
+circular()
+print((datetime.datetime.now()-start_time))
